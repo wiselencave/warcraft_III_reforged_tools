@@ -384,12 +384,12 @@ struct Warcraft_3_Ref_Read
         lay.TeamColorMultiplier = readfloat stream
      
         -- unknown for now -> a set of 14 integers
-        if ( _mdx_version == 1100 ) then _helper.SkipBytes stream 56
+        if ( _mdx_version >= 1100 ) then _helper.SkipBytes stream 56
 		
         local animationsArePresent = false
         
         if ( _mdx_version == 1000 and lay.Size > 52 ) then animationsArePresent = true
-        if ( _mdx_version == 1100 and lay.Size > 108 ) then animationsArePresent = true
+        if ( _mdx_version >= 1100 and lay.Size > 108 ) then animationsArePresent = true
 
         if (animationsArePresent ) then
         (
