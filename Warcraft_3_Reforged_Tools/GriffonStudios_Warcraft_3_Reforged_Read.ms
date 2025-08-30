@@ -227,7 +227,7 @@ struct Warcraft_3_Ref_Read
         fseek stream tag.Offset #seek_set
         local version = readLong stream
             
-        if (version != 1000 and version != 1100) then throw (format "[Error] Incorrect version: %, expected version: 1000 or 1100\n" version)
+        if (version < 1000 or version > 1200) then throw (format "[Error] Incorrect version: %, expected version: 1000 or 1100 or 1200\n" version)
         
         if DEBUG_MODE then format "Version: %\n" version
         
@@ -384,12 +384,12 @@ struct Warcraft_3_Ref_Read
         lay.TeamColorMultiplier = readfloat stream
      
         -- unknown for now -> a set of 14 integers
-        if ( _mdx_version == 1100 ) then _helper.SkipBytes stream 56
+        if ( _mdx_version >= 1100 ) then _helper.SkipBytes stream 56
 		
         local animationsArePresent = false
         
         if ( _mdx_version == 1000 and lay.Size > 52 ) then animationsArePresent = true
-        if ( _mdx_version == 1100 and lay.Size > 108 ) then animationsArePresent = true
+        if ( _mdx_version >= 1100 and lay.Size > 108 ) then animationsArePresent = true
 
         if (animationsArePresent ) then
         (
@@ -925,7 +925,7 @@ struct Warcraft_3_Ref_Read
             id, name, parentId, flags, type, 
             farAttenStart, farAttenEnd, 
             rgbColor, rgbIntensity, 
-            ambColor, ambIntensity, 
+            ambColor, ambIntensity, shadowIntensity,
             KGTR, KGRT, KGSC, KLAV, KLAI,
             lightRef, size, headerSize)
         
@@ -964,6 +964,7 @@ struct Warcraft_3_Ref_Read
             l.rgbIntensity  = readFloat stream
             l.ambColor      = _reader.readColor stream
             l.ambIntensity  = readFloat stream
+            if (_mdx_version >= 1200) then l.shadowIntensity = readFloat stream
             
             for i=1 to 2 do
             (
